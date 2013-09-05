@@ -23,13 +23,10 @@ class RobotComm
     def open
         @sock = UDPSocket.new
         @sock.bind( '0.0.0.0', RobotComm::CONSOLE_PORT + @id )
-        @sock_out = @sock#UDPSocket.new
+        @sock_out = @sock
     end
 
     def send_to_console( data )
-        #puts "sending to #{@console_addr[0]}:#{@console_addr[1]} data: #{data}"
-        #puts "   r send at #{Time.new.to_f}"
-        #puts "r send: #{data.length()}"
         @sock_out.send( data, 0, @console_addr[0], @console_addr[1] )
     end
 
@@ -47,16 +44,11 @@ class RobotComm
 
         # keep going while there's messages waiting
         while @controller.running and (wait_for or @sock.ready?)
-            # see if there's any messages waiting
-            #( i, o, e ) = select( [@sock], [], [], 0.01 )
-            #break if !i
 
             # read and handle a message
             msg, sender = @sock.recvfrom( 65536 )
-            #puts "   r recv at #{Time.new.to_f}"
             msg = Marshal.load( msg )
 
-            #puts "got msg type #{msg[0]}"
             if ( msg[0] == wait_for )
                 return msg
             elsif ( wait_for && (msg[0] != CommCodes::KILL) )
@@ -74,15 +66,12 @@ class RobotComm
             if !@controller.running
                 raise RobotComm::KilledWhileWaitingException
             end
-            #sleep(0.001) if !msg
         end
         msg
     end
 
     def handle_msg( msg )
-        #puts " handling msg #{msg[0]}"
         if ( @@handlers.keys().include? msg[0] )
-            #puts "  handling msg #{msg[0]}"
             send( @@handlers[ msg[0] ],  msg )
         else
             puts "Error: unregistered message number: #{msg[0]}"
@@ -107,12 +96,8 @@ class RobotComm
 
     def position
         s = Marshal.dump( [CommCodes::REQUEST_POSITION, @id] )
-        #puts "sending position request at #{Time.new.to_f}"
         send_to_console( s )
-        #puts "waiting for position at     #{Time.new.to_f}"
         msg = wait_for_msg( CommCodes::POSITION )
-        #puts "got position at             #{Time.new.to_f}"
-        #puts ""
         ( type, x, y, z, t ) = msg
         RobotPosition.new( Vector.new( x, y, z ), t )
     end
@@ -132,7 +117,6 @@ class RobotComm
         puts "sent death msg; closing socket"
         @sock.close()
         puts "setting controller.running to false"
-        #exit( -1 )
         @controller.running = false
         puts "set controller.running to false"
     end
@@ -162,7 +146,7 @@ class RobotComm
         send_to_console( s )
     end
 
-    @@handlers = { CommCodes::START, :start_robot,
-                   CommCodes::KILL,  :kill,
-                   CommCodes::PAUSE, :switch_paused }
+    @@handlers = { CommCodes::START => :start_robot,
+                   CommCodes::KILL =>  :kill,
+                   CommCodes::PAUSE => :switch_paused }
 end

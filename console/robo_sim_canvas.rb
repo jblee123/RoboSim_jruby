@@ -48,18 +48,6 @@ class RoboSimCanvas < JPanel
                     paintImmediately bounds
                 end
 
-                # redraw_obs = lambda {
-                #     (@obs_readings[ params['robot_id'] ] or []).each do |reading|
-                #         x, y = @scale.meters_to_pixels( reading.x, reading.y )
-                #         paintImmediately( Rectangle.new( x - 3, y - 3, 6, 6 ) )
-                #     end
-                # }
-
-                # redraw_obs.call
-                # @obs_readings[ params['robot_id'] ] = params['readings']
-                # redraw_obs.call
-
-
             elsif ( params['type'] == 'robot_pos' )
                 old_pos = params['old_pos']
                 new_pos = params['new_pos']
@@ -71,27 +59,13 @@ class RoboSimCanvas < JPanel
                 paintImmediately bounds
             end
         end
-        #repaint
+
         if !params
             paintImmediately Rectangle.new( getSize )
         end
-
-        # r = @simulator.robots.values.first
-        # #puts r
-        # if r
-        #     x, y = @scale.meters_to_pixels( r.pos.location.x, r.pos.location.y )
-        #     d = @scale.meter_to_pixel_dist( 1 )
-        #     repaint( x - d, y - d, 2*d, 2*d )
-        # end
     end
 
     def paint( g )
-        # call_time = Time.new
-        # if ( @last_call_time )
-        #     puts "since last call time: #{call_time-@last_call_time}"
-        # end
-        # @last_call_time = call_time
-        #t1 = Time.new
         g.set_rendering_hint( RenderingHints::KEY_ANTIALIASING,
                               RenderingHints::VALUE_ANTIALIAS_ON )
         g.setColor( Color::WHITE )
@@ -128,9 +102,6 @@ class RoboSimCanvas < JPanel
         @obs_readings.values.each do |readings|
             draw_readings( g, readings )
         end
-        #t2 = Time.new
-        #puts "time: #{t2-t1}"
-        #puts ""
     end
 
     def draw_obstacle( g, obs )

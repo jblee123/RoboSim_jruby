@@ -57,7 +57,7 @@ class Simulator
             robot = @robots[ id ]
             old_pos = robot.pos
             robot.pos = pos
-            fire_state_changed( { 'type', 'robot_pos', 'old_pos', old_pos, 'new_pos', pos } )
+            fire_state_changed( { 'type' => 'robot_pos', 'old_pos' => old_pos, 'new_pos' => pos } )
         else
             puts 'Error: tried to update an unregistered robot: ' + id.to_s
         end
@@ -86,16 +86,6 @@ class Simulator
         ray_angle = ray_num * 360 / Simulator::NUM_OF_SIM_RAYS
         v = Vector.new( 1, 0, 0 ).rotate_z( robot.pos.heading + ray_angle ) + robot.pos.location
         ray = GeomUtils::Ray.new( robot.pos.location, v )
-
-        # get the closest intersection
-        # env = @app_instance.environment
-        # ( env.obstacle_list + env.wall_list ).
-        #     map { |obs| obs.intersect_with_ray( ray ) }.
-        #     select { |reading| reading }.
-        #     map { |reading| Simulator.global_to_egocentric( robot.pos, reading ) }.
-        #     sort { |r1,r2| r1.length <=> r2.length }.
-        #     first
-
 
         # get the closest intersection
         closest_dist = 1000000
@@ -128,9 +118,8 @@ class Simulator
                 map { |i| get_closest_reading( robot, i ) }.
                 select { |reading| reading }
 
-            #drawable_readings = readings.map { |r| r.rotate_z( robot.pos.heading ) + robot.pos.location }
             drawable_readings = readings.map { |r| Simulator.egocentric_to_global( robot.pos, r ) }
-            fire_state_changed( { 'type', 'obs_readings', 'robot_id', id, 'readings', drawable_readings } )
+            fire_state_changed( { 'type' => 'obs_readings', 'robot_id' => id, 'readings' => drawable_readings } )
         end
         readings
     end
@@ -175,15 +164,6 @@ class Simulator
         delta = to_vec - from_vec
         ray_len = delta.length
         max_collision_dist = ray_len + robot_radius
-
-        # env = @app_instance.environment
-        # closest_intersection = ( env.obstacle_list + env.wall_list ).
-        #     map { |obs| obs.intersect_with_ray( ray ) }.
-        #     select { |intersection| intersection }.
-        #     map { |intersection| [intersection, ( intersection - from_vec ).length] }.
-        #     select { |i| i[1] < max_collision_dist }.
-        #     sort { |i1,i2| i1[1] <=> i2[1] }.
-        #     first
 
         closest_dist = 1000000
         closest_intersection = nil
@@ -230,7 +210,7 @@ class Simulator
 
             # update the robot's position and re-draw it
             robot.pos.location = robot.pos.location + v
-            fire_state_changed( { 'type', 'robot_pos', 'old_pos', old_pos, 'new_pos', robot.pos } )
+            fire_state_changed( { 'type' => 'robot_pos', 'old_pos' => old_pos, 'new_pos' => robot.pos } )
         else
             puts 'Error: tried to move an unregistered robot: ' + id.to_s
         end

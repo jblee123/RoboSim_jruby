@@ -152,22 +152,6 @@ end
 
 class Environment
 
-    # ITEM_TYPES = [ 'obstacle', 'wall', 'label', 'item' ]
-    # ITEM_TYPES.each do |type|
-    #     define_method( "add_#{type}" ) do |item|
-    #         instance_variable_get( Environment.type_list_name( type ) ) << item
-    #     end
-
-    #     define_method( "#{type}_list" ) do
-    #         instance_variable_get( Environment.type_list_name( type ) )
-    #     end
-    # end
-
-    # def Environment.type_list_name( name )
-    #     "@#{type}_list"
-    # end
-    # private_class_method :type_list_name
-
     attr_reader :width, :height, :obstacle_list, :wall_list, :label_list, :item_list
 
     def initialize( width=10, height=10 )
@@ -178,9 +162,6 @@ class Environment
     end
 
     def clear_all
-        # ITEM_TYPES.each do |type|
-        #     instance_variable_set( Environment.type_list_name( type ), [] )
-        # end
         @obstacle_list = []
         @wall_list = []
         @label_list = []

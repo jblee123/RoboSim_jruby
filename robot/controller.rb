@@ -38,18 +38,14 @@ class Controller
 
             if @running
                 # run all the top-level behaviors
-                #t1 = Time.new
                 begin
                     @behaviors_to_run.each do |behavior|
                         behavior.output
                     end
                     robot_instance.increment_cycle
-                    #sleep(0.001)
                 rescue RobotComm::KilledWhileWaitingException
                 end
 
-                #t2 = Time.new
-                #puts "time: #{t2-t1}"
                 sleep(0.001)
             end
         end

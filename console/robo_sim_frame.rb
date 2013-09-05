@@ -9,12 +9,6 @@ java_import java.awt.Toolkit
 
 class RoboSimFrame < JFrame
 
-    # DEF_WIDTH = 600
-    # DEF_HEIGHT = 600
-
-    #attr_reader :canvas
-    #attr_writer :canvas
-
     def initialize( the_app )
         super "Robo Sim"
         init( the_app )
@@ -42,37 +36,17 @@ class RoboSimFrame < JFrame
                                                          Insets.new( 0, 0, 0, 0 ),
                                                          0, 0 ) )
 
-        # @status_bar = NetworkSimStatusBar.new
-        # self.getContentPane.add( @status_bar,
-        #                          GridBagConstraints.new( 0, 1, 1, 1, 1.0, 0.0,
-        #                                                  GridBagConstraints::CENTER,
-        #                                                  GridBagConstraints::HORIZONTAL,
-        #                                                  Insets.new( 0, 0, 0, 0 ),
-        #                                                  0, 0 ) )
-
         addKeyListener FrameKeyListener.new( the_app )
         addWindowListener FrameWindowListener.new( the_app )
 
-        #setDefaultCloseOperation JFrame::EXIT_ON_CLOSE
+        setDefaultCloseOperation JFrame::EXIT_ON_CLOSE
         setLocationRelativeTo nil
         setVisible true
     end
 
-    # def environment=( environment )
-    #     @node_canvas.environment = environment
-    # end
-
-    # def random_seed=( seed )
-    #     @status_bar.random_seed = seed
-    # end
-
     def switch_paused
         self.app_instance.communicator.send_switch_pause()
     end
-
-    # def repaint_canvas
-    #     @canvas.repaint
-    # end
 
     class FrameKeyListener < java.awt.event.KeyAdapter
 
@@ -101,5 +75,3 @@ class RoboSimFrame < JFrame
         end
     end
 end
-
-#NetworkSimFrame.new

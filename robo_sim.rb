@@ -91,16 +91,18 @@ if ( RUN_ANYWAY )
 
     app = RoboSim.new( e )
 
-    cmd = "jruby robot/robot_test.rb -i 1 -x 1 -y 1 -c blue -v 1 -a 20"
-    Spoon.spawnp( 'jruby', '--profile', 'robot/robot_test.rb', '-i', '1', '-x', '1', '-y', '1', '-c', 'blue', '-v', '1', '-a', '20' )
+    class_file = "robot/robot_test.class"
+    rb_file = "robot/robot_test.rb"
+    exec_target = ((File.exist?(class_file) and class_file) or
+                   (File.exist?(rb_file) and rb_file))
 
-    #while true
+    #cmd = "jruby robot/robot_test.rb -i 1 -x 1 -y 1 -c blue -v 1 -a 20"
+    #Spoon.spawnp( 'jruby', '--profile', exec_target, '-i', '1', '-x', '1', '-y', '1', '-c', 'blue', '-v', '1', '-a', '20' )
+    Spoon.spawnp( 'jruby', exec_target, '-i', '1', '-x', '1', '-y', '1', '-c', 'blue', '-v', '1', '-a', '20' )
+
     while not app.shut_down
         sleep 1
     end
 
-    #sleep 5
-
     puts "ending"
-
 end

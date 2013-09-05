@@ -43,10 +43,7 @@ class Behavior
         activate if ( ( cycle_num - @last_cycle ) > 2 )
 
         if ( @last_cycle < cycle_num )
-            #t1 = Time.new
             compute_output
-            #t2 = Time.new
-            #puts "time: #{t2-t1} - #{self}"
             @last_cycle = cycle_num
         end
 
